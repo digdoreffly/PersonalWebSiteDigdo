@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111844"/>
+      <stop offset="100%" stop-color="#22306e"/>
+    </linearGradient>
+    <pattern id="grid2" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#EAE0CF" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="url(#g2)"/>
+  <rect width="800" height="500" fill="url(#grid2)"/>
+  <circle cx="120" cy="420" r="140" fill="#4f7cff" opacity="0.12"/>
+  <rect x="300" y="90" width="200" height="360" rx="26" fill="#EAE0CF" opacity="0.05" stroke="#EAE0CF" stroke-opacity="0.2" stroke-width="2"/>
+  <rect x="320" y="130" width="160" height="70" rx="8" fill="#4f7cff" opacity="0.18"/>
+  <g fill="#EAE0CF" opacity="0.7">
+    <rect x="320" y="220" width="160" height="14" rx="4"/>
+    <rect x="320" y="248" width="120" height="14" rx="4"/>
+    <rect x="320" y="276" width="140" height="14" rx="4"/>
+    <rect x="320" y="304" width="100" height="14" rx="4"/>
+  </g>
+  <rect x="320" y="360" width="160" height="40" rx="8" fill="#EAE0CF" opacity="0.12"/>
+  <text x="90" y="60" font-family="'Space Grotesk', sans-serif" font-size="32" font-weight="700" fill="#EAE0CF">Stock Opname App</text>
+  <text x="90" y="470" font-family="monospace" font-size="18" fill="#EAE0CF" opacity="0.6">Kotlin · MVVM · Retrofit</text>
+</svg>

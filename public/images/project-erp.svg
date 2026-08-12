@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#111844"/>
+      <stop offset="100%" stop-color="#1a2a6e"/>
+    </linearGradient>
+    <pattern id="grid1" width="40" height="40" patternUnits="userSpaceOnUse">
+      <path d="M40 0H0V40" fill="none" stroke="#EAE0CF" stroke-opacity="0.08" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="800" height="500" fill="url(#g1)"/>
+  <rect width="800" height="500" fill="url(#grid1)"/>
+  <circle cx="680" cy="90" r="120" fill="#4f7cff" opacity="0.12"/>
+  <g font-family="monospace" fill="#EAE0CF">
+    <rect x="90" y="150" width="620" height="220" rx="10" fill="#EAE0CF" opacity="0.04" stroke="#EAE0CF" stroke-opacity="0.18"/>
+    <circle cx="118" cy="178" r="6" fill="#ff6b6b" opacity="0.8"/>
+    <circle cx="138" cy="178" r="6" fill="#ffd166" opacity="0.8"/>
+    <circle cx="158" cy="178" r="6" fill="#4fd18b" opacity="0.8"/>
+    <text x="120" y="230" font-size="20" opacity="0.85">BOM · PO · Budgeting</text>
+    <text x="120" y="264" font-size="20" opacity="0.85">Inventory · Warehouse</text>
+    <text x="120" y="298" font-size="20" opacity="0.85">QC · Production · Delivery</text>
+    <text x="120" y="340" font-size="16" opacity="0.5">internal-erp-system.module()</text>
+  </g>
+  <text x="90" y="120" font-family="'Space Grotesk', sans-serif" font-size="34" font-weight="700" fill="#EAE0CF">Internal ERP System</text>
+</svg>
