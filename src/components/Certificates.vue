@@ -1,88 +1,113 @@
 <template>
   <section id="certificates" class="section certificates">
     <div class="container">
-      <div class="section-head" v-reveal="'fade-up'">
-        <p class="section-tag">Credentials</p>
-        <h2 class="section-title">Certificates</h2>
+      <div class="cert-header" v-reveal="'fade-up'">
+        <h3 class="cert-section-label">
+          {{ currentLang === 'id' ? 'Lisensi & Sertifikasi Kompetensi' : 'Professional Certifications & Licenses' }}
+        </h3>
       </div>
 
-      <div class="cert-grid">
-        <div
-          v-for="(cert, i) in certificates"
-          :key="cert.title"
-          class="cert-card glass"
-          v-reveal="'fade-up'"
-          :style="{ transitionDelay: `${i * 90}ms` }"
+      <ul class="cert-table" role="list" v-reveal="'fade-up'">
+        <li
+          v-for="cert in certificates"
+          :key="cert.code"
+          class="cert-row"
         >
-          <div class="cert-icon">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
-              <path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7l-9-5Z" />
-              <path d="M9 12l2 2 4-4" />
-            </svg>
+          <span class="cert-code">{{ cert.code }}</span>
+          <div class="cert-main">
+            <h4 class="cert-title">
+              {{ currentLang === 'id' ? cert.titleId : cert.title }}
+            </h4>
+            <p class="cert-focus">
+              {{ currentLang === 'id' ? cert.focusId : cert.focus }}
+            </p>
           </div>
-          <h3 class="cert-title">{{ cert.title }}</h3>
-          <p class="cert-issuer">{{ cert.issuer }}</p>
-        </div>
-      </div>
+          <span class="cert-issuer">{{ cert.issuer }}</span>
+        </li>
+      </ul>
     </div>
   </section>
 </template>
 
 <script setup>
-import { certificates } from '../data/portfolio.js'
+import { certificates, currentLang } from '../data/portfolio.js'
 </script>
 
 <style scoped>
-.cert-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 22px;
+.certificates {
+  border-top: none;
+  padding-block-start: 0.5rem;
 }
 
-.cert-card {
-  padding: 30px 26px;
+.cert-header {
+  margin-block-end: 1.25rem;
+}
+
+.cert-section-label {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cert-table {
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
-  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+  background: var(--bg-surface);
+  overflow: hidden;
 }
 
-.cert-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(91, 141, 255, 0.4);
+.cert-row {
+  display: grid;
+  grid-template-columns: 95px 1.2fr 1fr;
+  gap: 1rem 2rem;
+  align-items: baseline;
+  padding: 1.35rem clamp(1.25rem, 2.5vw, 2rem);
+  transition: background-color 0.2s var(--ease);
 }
 
-.cert-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
+.cert-row:not(:last-child) {
+  border-bottom: 1px solid var(--rule);
+}
+
+.cert-row:hover {
+  background: var(--bg-elevated);
+}
+
+.cert-code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   color: var(--accent);
-  background: var(--accent-soft);
-  margin-bottom: 18px;
 }
 
 .cert-title {
   font-size: 1.02rem;
-  color: var(--cream);
-  margin-bottom: 8px;
+  color: var(--text-primary);
+  margin-block-end: 0.2rem;
+}
+
+.cert-focus {
+  font-size: 0.85rem;
+  color: var(--text-muted);
 }
 
 .cert-issuer {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--cream-dim);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  text-align: end;
 }
 
-@media (max-width: 860px) {
-  .cert-grid {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (max-width: 560px) {
-  .cert-grid {
+@media (max-width: 780px) {
+  .cert-row {
     grid-template-columns: 1fr;
+    gap: 0.35rem;
+  }
+
+  .cert-issuer {
+    text-align: start;
+    margin-block-start: 0.25rem;
   }
 }
 </style>

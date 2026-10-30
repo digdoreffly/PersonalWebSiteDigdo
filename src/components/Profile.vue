@@ -1,21 +1,39 @@
 <template>
   <section id="profile" class="section profile">
     <div class="container">
-      <div class="profile-grid">
-        <div class="profile-copy" v-reveal="'fade-right'">
-          <p class="section-tag">About Me</p>
-          <h2 class="section-title">Who I Am</h2>
-          <p class="profile-text">{{ about.paragraph }}</p>
+      <div class="section-head" v-reveal="'fade-up'">
+        <p class="section-index">
+          <span class="num">01</span>
+          <span>/ {{ currentLang === 'id' ? 'Pendekatan' : 'Approach' }}</span>
+        </p>
+        <div class="section-title-group">
+          <h2 class="section-title">
+            {{ t.title }},
+            <span class="serif-italic">{{ t.italicHighlight }}</span>
+          </h2>
+        </div>
+      </div>
+
+      <div class="profile-layout">
+        <div class="profile-prose" v-reveal="'fade-up'">
+          <p v-for="(para, i) in t.paragraphs" :key="i" class="prose-paragraph">
+            {{ para }}
+          </p>
         </div>
 
-        <div class="profile-stats" v-reveal="'fade-left'">
-          <div v-for="stat in about.stats" :key="stat.label" class="stat-card glass">
-            <p v-if="stat.value !== null" class="stat-value">
-              {{ counters[stat.label] }}{{ stat.suffix }}
-            </p>
-            <p v-else class="stat-icon">◆</p>
-            <p class="stat-label">{{ stat.label }}</p>
-          </div>
+        <div class="principles-column" v-reveal="'fade-up'">
+          <h3 class="principles-heading">
+            {{ currentLang === 'id' ? 'Prinsip Kerja Utama' : 'Working Principles' }}
+          </h3>
+          <ol class="principles-list" role="list">
+            <li v-for="item in t.principles" :key="item.num" class="principle-item">
+              <span class="principle-num">{{ item.num }}</span>
+              <div class="principle-body">
+                <h4 class="principle-title">{{ item.title }}</h4>
+                <p class="principle-detail">{{ item.detail }}</p>
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
     </div>
@@ -23,150 +41,94 @@
 </template>
 
 <script setup>
-import { reactive, onMounted, onUnmounted, ref } from 'vue'
-import { about } from '../data/portfolio.js'
+import { computed } from 'vue'
+import { about, currentLang } from '../data/portfolio.js'
 
-const counters = reactive({})
-about.stats.forEach((stat) => {
-  counters[stat.label] = stat.value !== null ? 0 : null
-})
-
-let observer
-const rootEl = ref(null)
-
-function animateCounters() {
-  const reduced =
-    window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  about.stats.forEach((stat) => {
-    if (stat.value === null) return
-
-    if (reduced) {
-      counters[stat.label] = stat.value
-      return
-    }
-
-    const duration = 900
-    const start = performance.now()
-
-    function tick(now) {
-      const progress = Math.min((now - start) / duration, 1)
-      counters[stat.label] = Math.floor(progress * stat.value)
-      if (progress < 1) {
-        requestAnimationFrame(tick)
-      } else {
-        counters[stat.label] = stat.value
-      }
-    }
-
-    requestAnimationFrame(tick)
-  })
-}
-
-onMounted(() => {
-  const section = document.getElementById('profile')
-  observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCounters()
-          observer.disconnect()
-        }
-      })
-    },
-    { threshold: 0.3 }
-  )
-  if (section) observer.observe(section)
-})
-
-onUnmounted(() => {
-  if (observer) observer.disconnect()
-})
+const t = computed(() => about.copy[currentLang.value])
 </script>
 
 <style scoped>
-.profile-grid {
+.profile-layout {
   display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 60px;
-  align-items: center;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  align-items: start;
 }
 
-.profile-copy .section-tag,
-.profile-copy .section-title {
-  text-align: left;
+.profile-prose {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
 }
 
-.profile-text {
-  margin-top: 20px;
-  color: var(--cream-soft);
-  font-size: 1.02rem;
-  max-width: 520px;
+.prose-paragraph {
+  font-size: clamp(1.02rem, 0.96rem + 0.25vw, 1.14rem);
+  line-height: 1.78;
+  color: var(--text-secondary);
+  max-width: 62ch;
 }
 
-.profile-stats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+.prose-paragraph:first-child {
+  color: var(--text-primary);
+  font-size: clamp(1.08rem, 1rem + 0.3vw, 1.22rem);
 }
 
-.stat-card {
-  padding: 28px 20px;
+.principles-column {
+  background: var(--bg-surface);
+  border: 1px solid var(--rule);
   border-radius: var(--radius-md);
-  text-align: center;
-  transition: transform 0.3s var(--ease), border-color 0.3s var(--ease);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(91, 141, 255, 0.4);
+.principles-heading {
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  padding-block-end: 1rem;
+  border-bottom: 1px solid var(--rule);
 }
 
-.stat-value {
-  font-family: var(--font-heading);
-  font-size: 2.1rem;
-  font-weight: 700;
+.principles-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.principle-item {
+  display: grid;
+  grid-template-columns: 2.25rem 1fr;
+  gap: 0.75rem;
+  padding-block: 1.25rem;
+}
+
+.principle-item:not(:last-child) {
+  border-bottom: 1px solid var(--rule);
+}
+
+.principle-num {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.35rem;
+  line-height: 1.1;
   color: var(--accent);
 }
 
-.stat-icon {
-  font-size: 1.4rem;
-  color: var(--accent);
+.principle-title {
+  font-size: 1rem;
+  color: var(--text-primary);
+  margin-block-end: 0.35rem;
 }
 
-.stat-label {
-  margin-top: 8px;
-  font-size: 0.84rem;
-  color: var(--cream-dim);
-  line-height: 1.4;
+.principle-detail {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 860px) {
-  .profile-grid {
+  .profile-layout {
     grid-template-columns: 1fr;
-    gap: 40px;
-  }
-
-  .profile-copy .section-tag,
-  .profile-copy .section-title,
-  .profile-text {
-    text-align: center;
-    margin-inline: auto;
-  }
-}
-
-@media (max-width: 480px) {
-  .profile-stats {
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-  }
-
-  .stat-card {
-    padding: 20px 12px;
-  }
-
-  .stat-value {
-    font-size: 1.6rem;
   }
 }
 </style>

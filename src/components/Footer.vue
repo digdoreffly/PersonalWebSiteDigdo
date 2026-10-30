@@ -1,34 +1,45 @@
 <template>
   <footer class="footer">
     <div class="container footer-inner">
-      <div class="footer-brand">
-        <p class="brand">
-          <span class="brand-bracket">&lt;</span>DIGDO.DEV<span class="brand-bracket">/&gt;</span>
+      <div class="footer-col">
+        <p class="footer-brand">
+          Digdo Reffly Nugroho<span class="dot">.</span>
         </p>
-        <p class="tagline">Fullstack Programmer &amp; Web Developer</p>
+        <p class="footer-note">
+          {{
+            currentLang === 'id'
+              ? 'Fullstack Programmer & Web Developer · Cikarang / Depok, Indonesia'
+              : 'Fullstack Programmer & Web Developer · Cikarang / Depok, Indonesia'
+          }}
+        </p>
       </div>
 
-      <div class="footer-links">
+      <nav class="footer-links" aria-label="Footer">
         <a :href="`mailto:${personal.email}`">Email</a>
         <a :href="personal.linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a :href="personal.github" target="_blank" rel="noopener noreferrer">GitHub</a>
-      </div>
+        <a :href="personal.cvFile" download>CV (PDF)</a>
+      </nav>
+
+      <p class="copyright">
+        © {{ year }} {{ personal.name }} —
+        {{ currentLang === 'id' ? 'Dirancang dengan perhatian pada detail.' : 'Set in Plus Jakarta Sans & Instrument Serif.' }}
+      </p>
     </div>
-    <p class="copyright">© {{ year }} Digdo Reffly Nugroho</p>
   </footer>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { personal } from '../data/portfolio.js'
+import { personal, currentLang } from '../data/portfolio.js'
 
 const year = computed(() => new Date().getFullYear())
 </script>
 
 <style scoped>
 .footer {
-  border-top: 1px solid var(--glass-border);
-  padding: 48px 0 28px;
+  border-top: 1px solid var(--rule);
+  padding-block: 2.5rem;
 }
 
 .footer-inner {
@@ -36,35 +47,37 @@ const year = computed(() => new Date().getFullYear())
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 1.25rem 2rem;
 }
 
-.brand {
+.footer-brand {
   font-family: var(--font-heading);
   font-weight: 700;
-  font-size: 1.05rem;
-  color: var(--cream);
+  font-size: 0.98rem;
+  color: var(--text-primary);
 }
 
-.brand-bracket {
+.dot {
   color: var(--accent);
 }
 
-.tagline {
-  margin-top: 6px;
-  font-size: 0.84rem;
-  color: var(--cream-dim);
+.footer-note {
+  margin-block-start: 0.2rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
 }
 
 .footer-links {
   display: flex;
-  gap: 28px;
+  flex-wrap: wrap;
+  gap: 1.5rem;
 }
 
 .footer-links a {
-  font-size: 0.86rem;
-  color: var(--cream-soft);
-  transition: color 0.25s var(--ease);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: color 0.2s var(--ease);
 }
 
 .footer-links a:hover {
@@ -72,17 +85,15 @@ const year = computed(() => new Date().getFullYear())
 }
 
 .copyright {
-  margin-top: 34px;
-  text-align: center;
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--cream-dim);
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
-@media (max-width: 560px) {
+@media (max-width: 720px) {
   .footer-inner {
     flex-direction: column;
-    text-align: center;
+    align-items: flex-start;
   }
 }
 </style>

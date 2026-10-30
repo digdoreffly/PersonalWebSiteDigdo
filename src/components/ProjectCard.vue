@@ -1,57 +1,131 @@
 <template>
-  <article class="project-card glass" :class="{ featured: project.featured }">
-    <span v-if="project.featured" class="featured-badge">★ Featured Project</span>
-
-    <div class="card-image">
-      <img :src="project.image" :alt="project.name" loading="lazy" />
-    </div>
-
-    <div class="card-body">
-      <div class="card-top">
-        <span class="category">{{ project.category }}</span>
+  <article class="case-study surface-card" :class="{ featured: project.featured }">
+    <!-- Case Study Top Meta Strip -->
+    <header class="case-meta">
+      <div class="meta-left">
+        <span class="case-index">{{ project.index }}</span>
+        <span class="case-category">
+          {{ currentLang === 'id' ? project.categoryId : project.category }}
+        </span>
+        <span v-if="project.featured" class="primary-badge">
+          {{ currentLang === 'id' ? 'Fokus Utama' : 'Primary System' }}
+        </span>
       </div>
-      <h3 class="name">{{ project.name }}</h3>
-      <p class="desc">{{ project.description }}</p>
-
-      <div v-if="project.modules" class="modules">
-        <span v-for="m in project.modules" :key="m" class="tag">{{ m }}</span>
+      <div class="meta-right">
+        <span class="case-client">{{ project.client }}</span>
+        <span class="meta-sep" aria-hidden="true">·</span>
+        <span class="case-year">{{ project.year }}</span>
       </div>
+    </header>
 
-      <div class="tech-tags">
-        <span v-for="tech in project.technologies" :key="tech" class="tag tag-accent">{{ tech }}</span>
-      </div>
+    <!-- Case Study Two-Column Content -->
+    <div class="case-grid">
+      <div class="case-narrative">
+        <h3 class="case-title">
+          {{ currentLang === 'id' ? project.nameId : project.name }}
+        </h3>
 
-      <div class="card-actions">
-        <a
-          v-if="project.liveUrl"
-          :href="project.liveUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-outline btn-sm"
+        <p class="case-role">
+          {{ currentLang === 'id' ? project.roleSummaryId : project.roleSummary }}
+        </p>
+
+        <p class="case-desc">
+          {{ currentLang === 'id' ? project.descriptionId : project.description }}
+        </p>
+
+        <ul
+          v-if="project.highlights"
+          class="case-highlights"
+          role="list"
         >
-          View Project ↗
-        </a>
-        <span v-else class="btn btn-outline btn-sm disabled">{{ project.liveLabel }}</span>
+          <li
+            v-for="(point, idx) in currentLang === 'id' ? project.highlightsId : project.highlights"
+            :key="idx"
+          >
+            {{ point }}
+          </li>
+        </ul>
 
-        <a
-          :href="project.githubUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="icon-link"
-          aria-label="View on GitHub"
-        >
-          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" aria-hidden="true">
-            <path
-              d="M12 .5C5.73.5.75 5.48.75 11.75c0 4.94 3.2 9.13 7.65 10.6.56.1.76-.24.76-.54v-2.1c-3.11.68-3.77-1.5-3.77-1.5-.51-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.72-1.5-2.48-.28-5.09-1.24-5.09-5.53 0-1.22.44-2.22 1.15-3-.11-.28-.5-1.42.11-2.96 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.65 0c2.15-1.45 3.1-1.15 3.1-1.15.61 1.54.22 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.62 5.25-5.11 5.52.41.35.76 1.04.76 2.1v3.11c0 .3.2.65.76.54 4.44-1.48 7.64-5.66 7.64-10.6C23.25 5.48 18.27.5 12 .5Z"
-            />
-          </svg>
-        </a>
+        <div class="case-footer">
+          <div class="tech-tags" aria-label="Technologies used">
+            <span v-for="tech in project.technologies" :key="tech" class="tag tag-accent">
+              {{ tech }}
+            </span>
+          </div>
+
+          <div class="case-actions">
+            <a
+              v-if="project.liveUrl"
+              :href="project.liveUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary btn-sm"
+            >
+              <span>{{ currentLang === 'id' ? project.liveLabelId : project.liveLabel }}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+            <span v-else class="deployment-tag">
+              <span class="lock-dot" aria-hidden="true"></span>
+              {{ currentLang === 'id' ? project.liveLabelId : project.liveLabel }}
+            </span>
+
+            <a
+              :href="project.githubUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="github-link"
+            >
+              <span>GitHub</span>
+              <span class="visually-hidden">({{ project.name }})</span>
+              <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
       </div>
+
+      <!-- Right Column: Tactile System Architecture Schematic -->
+      <aside class="case-schematic" :aria-label="`${project.name} architecture schematic`">
+        <div class="schematic-head">
+          <span class="schematic-label">ARCH // {{ project.schematic.title }}</span>
+          <span class="schematic-count">{{ project.modules.length }} MODULES</span>
+        </div>
+
+        <div class="schematic-layers">
+          <div
+            v-for="(layer, lIdx) in project.schematic.layers"
+            :key="layer.label"
+            class="schematic-layer"
+          >
+            <div class="layer-meta">
+              <span class="layer-step">L{{ lIdx + 1 }}</span>
+              <span class="layer-name">{{ layer.label }}</span>
+            </div>
+            <div class="layer-nodes">
+              <span v-for="node in layer.nodes" :key="node" class="node-pill">
+                {{ node }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="schematic-modules">
+          <p class="modules-caption">
+            {{ currentLang === 'id' ? 'Cakupan Modul & Fitur:' : 'System Modules & Scope:' }}
+          </p>
+          <div class="modules-wrap">
+            <span v-for="m in project.modules" :key="m" class="module-chip">
+              {{ m }}
+            </span>
+          </div>
+        </div>
+      </aside>
     </div>
   </article>
 </template>
 
 <script setup>
+import { currentLang } from '../data/portfolio.js'
+
 defineProps({
   project: {
     type: Object,
@@ -61,115 +135,281 @@ defineProps({
 </script>
 
 <style scoped>
-.project-card {
-  border-radius: var(--radius-lg);
+.case-study {
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.35s var(--ease), border-color 0.35s var(--ease), box-shadow 0.35s var(--ease);
-  position: relative;
+  transition: border-color 0.25s var(--ease);
 }
 
-.project-card:hover {
-  transform: translateY(-8px);
-  border-color: rgba(91, 141, 255, 0.5);
-  box-shadow: 0 26px 50px -20px rgba(91, 141, 255, 0.3);
+.case-study.featured {
+  border-color: var(--rule-strong);
 }
 
-.featured-badge {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 2;
-  padding: 5px 12px;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.04em;
-  background: var(--accent);
-  color: var(--navy-deep);
-  font-weight: 600;
+.case-study:hover {
+  border-color: var(--accent-border);
 }
 
-.card-image {
-  aspect-ratio: 16 / 10;
-  overflow: hidden;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.card-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s var(--ease);
-}
-
-.project-card:hover .card-image img {
-  transform: scale(1.05);
-}
-
-.card-body {
-  padding: 26px 26px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  flex: 1;
-}
-
-.category {
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  letter-spacing: 0.05em;
-  color: var(--accent);
-}
-
-.name {
-  font-size: 1.2rem;
-  color: var(--cream);
-}
-
-.desc {
-  color: var(--cream-soft);
-  font-size: 0.92rem;
-  flex: 1;
-}
-
-.modules,
-.tech-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.card-actions {
+.case-meta {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin-top: 8px;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  padding: 1rem clamp(1.5rem, 3vw, 2.25rem);
+  background: var(--bg-elevated);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
 }
 
-.btn.disabled {
-  opacity: 0.55;
-  cursor: default;
-  pointer-events: none;
+.meta-left,
+.meta-right {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
 }
 
-.icon-link {
+.case-index {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.case-category {
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.primary-badge {
+  padding: 0.15rem 0.55rem;
+  border-radius: var(--radius-xs);
+  background: var(--bg-paper);
+  color: var(--text-ink);
+  font-weight: 600;
+  font-size: 0.68rem;
+  text-transform: uppercase;
+}
+
+.case-client {
+  color: var(--text-secondary);
+}
+
+.meta-sep,
+.case-year {
+  color: var(--text-muted);
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: clamp(1.75rem, 3.5vw, 3rem);
+  padding: clamp(1.5rem, 3.2vw, 2.5rem);
+  align-items: start;
+}
+
+.case-title {
+  font-size: clamp(1.4rem, 1.1rem + 1vw, 1.85rem);
+  color: var(--text-primary);
+  margin-block-end: 0.45rem;
+}
+
+.case-role {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent-amber);
+  margin-block-end: 1.15rem;
+}
+
+.case-desc {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.7;
+  margin-block-end: 1.25rem;
+  max-width: 64ch;
+}
+
+.case-highlights {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-block-end: 1.75rem;
+  padding-inline-start: 1.1rem;
+}
+
+.case-highlights li {
+  position: relative;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+.case-highlights li::before {
+  content: '—';
+  position: absolute;
+  inset-inline-start: -1.1rem;
+  color: var(--accent);
+}
+
+.case-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding-block-start: 1.25rem;
+  border-top: 1px solid var(--rule);
+}
+
+.tech-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.case-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.deployment-tag {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 1px solid var(--glass-border);
-  color: var(--cream-soft);
-  transition: border-color 0.25s var(--ease), color 0.25s var(--ease), transform 0.25s var(--ease);
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  padding: 0.4rem 0.75rem;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--radius-xs);
 }
 
-.icon-link:hover {
+.lock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-amber);
+}
+
+.github-link {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  padding-block: 0.25rem;
+  border-bottom: 1px solid var(--rule-strong);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
+}
+
+.github-link:hover {
+  color: var(--text-primary);
   border-color: var(--accent);
+}
+
+/* --- Architectural Schematic Box --- */
+.case-schematic {
+  background: var(--bg-ink);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  padding: 1.35rem;
+}
+
+.schematic-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding-block-end: 0.85rem;
+  margin-block-end: 1rem;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+}
+
+.schematic-count {
   color: var(--accent);
-  transform: translateY(-2px);
+}
+
+.schematic-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.schematic-layer {
+  padding: 0.75rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
+}
+
+.layer-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  margin-block-end: 0.5rem;
+}
+
+.layer-step {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.layer-name {
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.layer-nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.node-pill {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  padding: 0.2rem 0.55rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--rule-strong);
+  border-radius: 3px;
+  color: var(--text-primary);
+}
+
+.schematic-modules {
+  margin-block-start: 1rem;
+  padding-block-start: 0.9rem;
+  border-top: 1px solid var(--rule);
+}
+
+.modules-caption {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-block-end: 0.5rem;
+}
+
+.modules-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.module-chip {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  padding: 0.15rem 0.45rem;
+  background: rgba(239, 232, 218, 0.04);
+  border-radius: 3px;
+}
+
+@media (max-width: 920px) {
+  .case-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

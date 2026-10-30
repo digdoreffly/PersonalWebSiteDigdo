@@ -2,221 +2,255 @@
   <section id="experience" class="section experience">
     <div class="container">
       <div class="section-head" v-reveal="'fade-up'">
-        <p class="section-tag">Career</p>
-        <h2 class="section-title">Experience</h2>
-      </div>
-
-      <div class="timeline">
-        <div class="timeline-line"></div>
-
-        <div v-for="item in experience" :key="item.company + item.period" class="timeline-item" v-reveal="'fade-right'">
-          <span class="timeline-dot" :class="{ current: item.current }"></span>
-          <div class="timeline-card glass">
-            <div class="card-head">
-              <div>
-                <h3 class="role">{{ item.role }}</h3>
-                <p class="company">
-                  {{ item.company }}
-                  <span v-if="item.location"> · {{ item.location }}</span>
-                </p>
-              </div>
-              <span class="period" :class="{ current: item.current }">{{ item.period }}</span>
-            </div>
-
-            <p v-if="item.description" class="description">{{ item.description }}</p>
-
-            <p v-if="item.project" class="project-name">Project: <span>{{ item.project }}</span></p>
-
-            <ul v-if="item.responsibilities" class="responsibilities">
-              <li v-for="task in item.responsibilities" :key="task">{{ task }}</li>
-            </ul>
-
-            <div v-if="item.technologies" class="tech-tags">
-              <span v-for="tech in item.technologies" :key="tech" class="tag tag-accent">{{ tech }}</span>
-            </div>
-
-            <a
-              v-if="item.liveUrl"
-              :href="item.liveUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="live-link"
-            >
-              Live: {{ item.liveLabel }} ↗
-            </a>
-          </div>
+        <p class="section-index">
+          <span class="num">03</span>
+          <span>/ {{ currentLang === 'id' ? 'Riwayat Karir' : 'Career Ledger' }}</span>
+        </p>
+        <div class="section-title-group">
+          <h2 class="section-title">
+            {{ currentLang === 'id' ? 'Pengalaman' : 'Professional' }}
+            <span class="serif-italic">
+              {{ currentLang === 'id' ? 'Profesional & Industri' : 'Experience' }}
+            </span>
+          </h2>
+          <p class="section-subtitle">
+            {{
+              currentLang === 'id'
+                ? 'Perjalanan membangun perangkat lunak di lingkungan manufaktur, otomotif, dan proyek klien independen.'
+                : 'A chronological record of engineering roles across manufacturing, automotive, and independent client engagements.'
+            }}
+          </p>
         </div>
       </div>
+
+      <ol class="ledger-list" role="list">
+        <li
+          v-for="item in experience"
+          :key="item.company + item.period"
+          class="ledger-row"
+          v-reveal="'fade-up'"
+        >
+          <!-- Left Column: Period, Company & Meta -->
+          <div class="ledger-meta">
+            <div class="period-line">
+              <span v-if="item.current" class="active-dot" aria-hidden="true"></span>
+              <span class="period-text">
+                {{ currentLang === 'id' ? item.periodId : item.period }}
+              </span>
+            </div>
+            <h3 class="company-name">{{ item.company }}</h3>
+            <p class="employment-meta">
+              <span>{{ currentLang === 'id' ? item.typeId : item.type }}</span>
+              <span v-if="item.location"> · {{ item.location }}</span>
+            </p>
+          </div>
+
+          <!-- Right Column: Role, Narrative, Responsibilities & Tech -->
+          <div class="ledger-body">
+            <div class="role-header">
+              <h4 class="role-title">
+                {{ currentLang === 'id' ? item.roleId : item.role }}
+              </h4>
+              <span v-if="item.project" class="project-ref">
+                {{ item.project }}
+              </span>
+            </div>
+
+            <p v-if="item.description" class="role-summary">
+              {{ currentLang === 'id' ? item.descriptionId : item.description }}
+            </p>
+
+            <ul
+              v-if="item.responsibilities"
+              class="role-tasks"
+              role="list"
+            >
+              <li
+                v-for="task in currentLang === 'id' ? item.responsibilitiesId : item.responsibilities"
+                :key="task"
+              >
+                {{ task }}
+              </li>
+            </ul>
+
+            <div class="ledger-footer">
+              <div v-if="item.technologies" class="tech-tags">
+                <span v-for="tech in item.technologies" :key="tech" class="tag">
+                  {{ tech }}
+                </span>
+              </div>
+
+              <a
+                v-if="item.liveUrl"
+                :href="item.liveUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="live-link"
+              >
+                <span>{{ item.liveLabel }}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 </template>
 
 <script setup>
-import { experience } from '../data/portfolio.js'
+import { experience, currentLang } from '../data/portfolio.js'
 </script>
 
 <style scoped>
-.timeline {
-  position: relative;
-  max-width: 760px;
-  margin: 0 auto;
-  padding-left: 36px;
-}
-
-.timeline-line {
-  position: absolute;
-  top: 6px;
-  bottom: 6px;
-  left: 6px;
-  width: 1px;
-  background: linear-gradient(to bottom, var(--accent), var(--glass-border));
-}
-
-.timeline-item {
-  position: relative;
-  margin-bottom: 34px;
-}
-
-.timeline-item:last-child {
-  margin-bottom: 0;
-}
-
-.timeline-dot {
-  position: absolute;
-  left: -36px;
-  top: 26px;
-  width: 13px;
-  height: 13px;
-  border-radius: 50%;
-  background: var(--navy);
-  border: 2px solid var(--accent);
-  box-shadow: 0 0 12px var(--accent);
-}
-
-.timeline-dot.current {
-  animation: pulseGlow 2s ease-in-out infinite;
-}
-
-.timeline-card {
-  padding: 28px 30px;
-  border-radius: var(--radius-md);
-  transition: border-color 0.3s var(--ease), transform 0.3s var(--ease);
-}
-
-.timeline-card:hover {
-  transform: translateX(4px);
-  border-color: rgba(91, 141, 255, 0.4);
-}
-
-.card-head {
+.ledger-list {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 16px;
-  flex-wrap: wrap;
-  margin-bottom: 14px;
+  flex-direction: column;
 }
 
-.role {
+.ledger-row {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem 3rem;
+  padding-block: clamp(2rem, 4vw, 2.75rem);
+}
+
+.ledger-row:first-child {
+  padding-block-start: 0.5rem;
+}
+
+.ledger-row:not(:last-child) {
+  border-bottom: 1px solid var(--rule);
+}
+
+.ledger-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.period-line {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--accent);
+  margin-block-end: 0.2rem;
+}
+
+.active-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent-olive);
+}
+
+.company-name {
   font-size: 1.12rem;
-  color: var(--cream);
-  margin-bottom: 4px;
+  color: var(--text-primary);
 }
 
-.company {
-  color: var(--cream-soft);
-  font-size: 0.92rem;
+.employment-meta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
 }
 
-.period {
+.ledger-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.role-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+}
+
+.role-title {
+  font-size: 1.25rem;
+  color: var(--text-primary);
+}
+
+.project-ref {
   font-family: var(--font-mono);
   font-size: 0.76rem;
-  letter-spacing: 0.04em;
-  color: var(--cream-dim);
-  white-space: nowrap;
-  padding: 5px 12px;
-  border-radius: 999px;
-  border: 1px solid var(--glass-border);
+  color: var(--accent-amber);
+  padding: 0.2rem 0.55rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-xs);
 }
 
-.period.current {
-  color: var(--accent);
-  border-color: rgba(91, 141, 255, 0.4);
-  background: var(--accent-soft);
+.role-summary {
+  color: var(--text-primary);
+  font-size: 0.98rem;
+  line-height: 1.65;
+  max-width: 65ch;
 }
 
-.description {
-  color: var(--cream-soft);
-  margin-bottom: 14px;
+.role-tasks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-inline-start: 1.1rem;
 }
 
-.project-name {
-  color: var(--cream-soft);
-  margin-bottom: 14px;
-}
-
-.project-name span {
-  color: var(--cream);
-  font-weight: 500;
-}
-
-.responsibilities {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px 18px;
-  margin-bottom: 16px;
-}
-
-.responsibilities li {
+.role-tasks li {
   position: relative;
-  padding-left: 16px;
-  font-size: 0.88rem;
-  color: var(--cream-dim);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  max-width: 68ch;
 }
 
-.responsibilities li::before {
-  content: '›';
+.role-tasks li::before {
+  content: '·';
   position: absolute;
-  left: 0;
+  inset-inline-start: -0.9rem;
   color: var(--accent);
+  font-weight: 700;
+}
+
+.ledger-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.25rem;
+  margin-block-start: 0.35rem;
 }
 
 .tech-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-bottom: 4px;
+  gap: 0.4rem;
 }
 
 .live-link {
-  display: inline-block;
-  margin-top: 12px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   font-family: var(--font-mono);
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   color: var(--accent);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.25s var(--ease);
+  border-bottom: 1px solid var(--accent-border);
+  transition: color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
 .live-link:hover {
-  border-color: var(--accent);
+  color: var(--text-primary);
+  border-color: var(--text-primary);
 }
 
-@media (max-width: 640px) {
-  .timeline {
-    padding-left: 28px;
-  }
-
-  .timeline-dot {
-    left: -28px;
-  }
-
-  .timeline-card {
-    padding: 22px 20px;
-  }
-
-  .responsibilities {
+@media (max-width: 820px) {
+  .ledger-row {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
   }
 }
 </style>

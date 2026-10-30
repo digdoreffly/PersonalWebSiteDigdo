@@ -1,276 +1,316 @@
 <template>
   <section class="hero">
-    <div class="container hero-inner">
-      <div class="hero-text">
-        <p class="hero-greeting enter-up" style="animation-delay: 0.1s">HELLO, I'M</p>
-        <h1 class="hero-name enter-up" style="animation-delay: 0.22s">{{ personal.name }}</h1>
-        <p class="hero-role enter-fade" style="animation-delay: 0.38s">
-          <span v-for="(role, i) in personal.roles" :key="role">
-            {{ role }}<br v-if="i < personal.roles.length - 1" />
-          </span>
-        </p>
-        <p class="hero-desc enter-fade" style="animation-delay: 0.5s">{{ personal.tagline }}</p>
-        <div class="hero-actions enter-fade" style="animation-delay: 0.62s">
-          <router-link :to="{ path: '/', hash: '#projects' }" class="btn btn-primary">
-            View Projects
-          </router-link>
-          <a :href="personal.cvFile" download class="btn btn-outline">Download CV</a>
+    <div class="container">
+      <!-- Top Editorial Status Strip -->
+      <div class="hero-status-bar enter-fade">
+        <div class="status-indicator">
+          <span class="status-dot" aria-hidden="true"></span>
+          <span class="status-text">{{ t.statusLabel }}</span>
+        </div>
+        <div class="status-location">
+          <span>{{ personal.location }}</span>
         </div>
       </div>
 
-      <div class="hero-visual enter-fade" style="animation-delay: 0.75s">
-        <div class="visual-glow"></div>
-        <div class="terminal glass">
-          <div class="terminal-bar">
-            <span class="dot dot-red"></span>
-            <span class="dot dot-yellow"></span>
-            <span class="dot dot-green"></span>
-            <span class="terminal-title">developer.js</span>
+      <!-- Main Asymmetric Editorial Grid -->
+      <div class="hero-grid">
+        <div class="hero-main">
+          <p class="hero-kicker enter-up" style="animation-delay: 0.05s">
+            {{ personal.name }} — {{ t.heroKicker }}
+          </p>
+
+          <h1 class="hero-headline enter-up" style="animation-delay: 0.12s">
+            {{ t.headlinePrefix }}
+            <span class="serif-italic highlight">{{ t.headlineItalic }}</span>
+            {{ t.headlineSuffix }}
+          </h1>
+
+          <p class="hero-lead enter-up" style="animation-delay: 0.2s">
+            {{ t.lead }}
+          </p>
+
+          <div class="hero-actions enter-up" style="animation-delay: 0.28s">
+            <router-link :to="{ path: '/', hash: '#projects' }" class="btn btn-primary">
+              <span>{{ t.primaryCta }}</span>
+              <span aria-hidden="true">↓</span>
+            </router-link>
+            <a :href="personal.cvFile" download class="btn btn-outline">
+              <span>{{ t.secondaryCta }}</span>
+              <span aria-hidden="true">↗</span>
+            </a>
           </div>
-          <div class="terminal-body">
-            <p><span class="tok-key">const</span> <span class="tok-var">developer</span> = {</p>
-            <p class="indent"><span class="tok-prop">name</span>: <span class="tok-str">'Digdo Reffly Nugroho'</span>,</p>
-            <p class="indent"><span class="tok-prop">role</span>: <span class="tok-str">'Fullstack Programmer'</span>,</p>
-            <p class="indent"><span class="tok-prop">stack</span>: [<span class="tok-str">'Vue'</span>, <span class="tok-str">'PHP'</span>, <span class="tok-str">'Kotlin'</span>],</p>
-            <p class="indent"><span class="tok-prop">status</span>: <span class="tok-str">'building...'</span></p>
-            <p>}<span class="cursor">|</span></p>
+
+          <div class="hero-quick-links enter-fade" style="animation-delay: 0.36s">
+            <a :href="personal.github" target="_blank" rel="noopener noreferrer" class="quick-link">
+              GitHub ↗
+            </a>
+            <span class="sep" aria-hidden="true">·</span>
+            <a :href="personal.linkedin" target="_blank" rel="noopener noreferrer" class="quick-link">
+              LinkedIn ↗
+            </a>
+            <span class="sep" aria-hidden="true">·</span>
+            <a :href="`mailto:${personal.email}`" class="quick-link">
+              {{ personal.email }}
+            </a>
           </div>
         </div>
 
-        <div class="float-chip chip-1">&lt;/&gt; Clean Code</div>
-        <div class="float-chip chip-2">◎ REST API</div>
-        <div class="grid-orb"></div>
-      </div>
-    </div>
+        <!-- Right Column: Warm Archival Paper Engineering Dossier -->
+        <aside class="hero-dossier paper-card enter-up" style="animation-delay: 0.22s" aria-label="Engineering specification summary">
+          <div class="dossier-header">
+            <span class="dossier-code">INDEX // DRN—2026</span>
+            <span class="dossier-stamp">{{ t.fieldNotesTitle }}</span>
+          </div>
 
-    <div class="hero-scroll enter-fade" style="animation-delay: 0.9s">
-      <span class="scroll-line"></span>
-      SCROLL
+          <dl class="dossier-list">
+            <div v-for="note in t.fieldNotes" :key="note.code" class="dossier-row">
+              <dt class="dossier-term">
+                <span class="term-code">{{ note.code }}</span>
+                <span>{{ note.label }}</span>
+              </dt>
+              <dd class="dossier-desc">{{ note.value }}</dd>
+            </div>
+          </dl>
+
+          <div class="dossier-footer">
+            <div class="dossier-footer-item">
+              <span class="meta-label">DEGREE</span>
+              <span class="meta-val">S.Kom (Informatics) · Gunadarma</span>
+            </div>
+            <div class="dossier-footer-item">
+              <span class="meta-label">CERTIFICATION</span>
+              <span class="meta-val">BNSP Certified Programmer</span>
+            </div>
+          </div>
+        </aside>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { personal } from '../data/portfolio.js'
+import { computed } from 'vue'
+import { personal, currentLang } from '../data/portfolio.js'
+
+const t = computed(() => personal.copy[currentLang.value])
 </script>
 
 <style scoped>
 .hero {
-  position: relative;
-  min-height: calc(100vh - 76px);
+  padding-block: clamp(2.5rem, 5vw, 4.5rem) clamp(4.5rem, 8vw, 6.5rem);
+}
+
+.hero-status-bar {
   display: flex;
   align-items: center;
-  padding: 60px 0 100px;
-  overflow: hidden;
-}
-
-.hero-inner {
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 60px;
-  align-items: center;
-}
-
-.hero-greeting {
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1.5rem;
+  padding-block-end: 1.5rem;
+  margin-block-end: clamp(2.25rem, 4vw, 3.5rem);
+  border-bottom: 1px solid var(--rule);
   font-family: var(--font-mono);
-  letter-spacing: 0.22em;
-  font-size: 0.85rem;
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+}
+
+.status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-olive);
+  flex-shrink: 0;
+}
+
+.status-location {
+  color: var(--text-muted);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1.32fr 0.88fr;
+  gap: clamp(2.25rem, 4.5vw, 4rem);
+  align-items: start;
+}
+
+.hero-kicker {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   color: var(--accent);
-  margin-bottom: 18px;
+  margin-block-end: 1.1rem;
 }
 
-.hero-name {
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
-  color: var(--cream);
-  margin-bottom: 18px;
+.hero-headline {
+  font-size: clamp(2.15rem, 1.35rem + 2.8vw, 3.55rem);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-block-end: 1.5rem;
 }
 
-.hero-role {
-  font-family: var(--font-heading);
-  font-size: clamp(1.1rem, 2vw, 1.5rem);
-  color: var(--cream-soft);
-  font-weight: 500;
-  margin-bottom: 20px;
+.hero-headline .highlight {
+  color: var(--bg-paper);
+  font-weight: 400;
+  border-bottom: 1px solid var(--accent);
+  padding-inline: 0.08em;
 }
 
-.hero-desc {
-  max-width: 480px;
-  color: var(--cream-dim);
-  margin-bottom: 34px;
+.hero-lead {
+  font-size: clamp(1rem, 0.94rem + 0.25vw, 1.125rem);
+  line-height: 1.72;
+  color: var(--text-secondary);
+  max-width: 62ch;
+  margin-block-end: 2.25rem;
 }
 
 .hero-actions {
   display: flex;
-  gap: 16px;
   flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-block-end: 2.25rem;
 }
 
-/* --- visual --- */
-.hero-visual {
-  position: relative;
+.hero-quick-links {
   display: flex;
-  justify-content: center;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.65rem;
+  padding-block-start: 1.4rem;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-muted);
 }
 
-.visual-glow {
-  position: absolute;
-  width: 340px;
-  height: 340px;
-  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
-  filter: blur(10px);
-  z-index: 0;
+.quick-link {
+  color: var(--text-secondary);
+  transition: color 0.2s var(--ease);
 }
 
-.grid-orb {
-  position: absolute;
-  inset: -30px;
-  z-index: -1;
-  background-image: radial-gradient(circle, rgba(234, 224, 207, 0.35) 1px, transparent 1px);
-  background-size: 22px 22px;
-  opacity: 0.12;
-  border-radius: 50%;
+.quick-link:hover {
+  color: var(--accent);
 }
 
-.terminal {
+.sep {
+  opacity: 0.45;
+}
+
+/* --- Warm Archival Paper Dossier --- */
+.hero-dossier {
+  padding: clamp(1.5rem, 3vw, 2rem);
   position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 420px;
-  border-radius: var(--radius-md);
-  overflow: hidden;
-  box-shadow: 0 30px 60px -20px rgba(0, 0, 0, 0.5);
-  animation: floatY 6s ease-in-out infinite;
 }
 
-.terminal-bar {
+.dossier-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--glass-border);
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-.dot-red { background: #ff6b6b; }
-.dot-yellow { background: #ffd166; }
-.dot-green { background: #4fd18b; }
-
-.terminal-title {
-  margin-left: 8px;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block-end: 1rem;
+  margin-block-end: 0.5rem;
+  border-bottom: 1.5px solid var(--text-ink);
   font-family: var(--font-mono);
-  font-size: 0.78rem;
-  color: var(--cream-dim);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
-.terminal-body {
-  padding: 22px 20px 26px;
-  font-family: var(--font-mono);
-  font-size: 0.86rem;
-  line-height: 1.9;
-  color: var(--cream-soft);
+.dossier-code {
+  font-weight: 600;
+  color: var(--text-ink);
 }
 
-.terminal-body .indent {
-  padding-left: 20px;
+.dossier-stamp {
+  padding: 0.2rem 0.5rem;
+  background: var(--text-ink);
+  color: var(--bg-paper);
+  border-radius: 3px;
+  font-size: 0.68rem;
 }
 
-.tok-key { color: #a996ff; }
-.tok-var { color: #5b8dff; }
-.tok-prop { color: var(--cream); }
-.tok-str { color: #7fe3b4; }
-
-.cursor {
-  color: var(--accent);
-  animation: blink 1s step-end infinite;
-}
-
-.float-chip {
-  position: absolute;
-  padding: 8px 16px;
-  border-radius: 999px;
-  font-family: var(--font-mono);
-  font-size: 0.76rem;
-  background: var(--glass-bg-strong);
-  border: 1px solid var(--glass-border);
-  backdrop-filter: blur(10px);
-  color: var(--cream-soft);
-  animation: floatY 5s ease-in-out infinite;
-  z-index: 2;
-}
-
-.chip-1 {
-  top: 10%;
-  right: -8px;
-  animation-delay: 0.4s;
-}
-
-.chip-2 {
-  bottom: 8%;
-  left: -18px;
-  animation-delay: 1s;
-}
-
-.hero-scroll {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
+.dossier-list {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.2em;
-  color: var(--cream-dim);
 }
 
-.scroll-line {
-  width: 1px;
-  height: 26px;
-  background: linear-gradient(to bottom, var(--accent), transparent);
-  animation: pulseGlow 2s ease-in-out infinite;
+.dossier-row {
+  padding-block: 0.95rem;
+}
+
+.dossier-row:not(:last-child) {
+  border-bottom: 1px solid var(--rule-ink);
+}
+
+.dossier-term {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-ink-muted);
+  margin-block-end: 0.3rem;
+}
+
+.term-code {
+  color: #B84A24;
+  font-weight: 600;
+}
+
+.dossier-desc {
+  font-size: 0.92rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text-ink);
+}
+
+.dossier-footer {
+  margin-block-start: 0.75rem;
+  padding-block-start: 1rem;
+  border-top: 1.5px solid var(--text-ink);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.dossier-footer-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.meta-label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  color: var(--text-ink-muted);
+}
+
+.meta-val {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--text-ink);
 }
 
 @media (max-width: 960px) {
-  .hero-inner {
+  .hero-grid {
     grid-template-columns: 1fr;
-    text-align: center;
-  }
-
-  .hero-desc {
-    margin-inline: auto;
-  }
-
-  .hero-actions {
-    justify-content: center;
-  }
-
-  .hero-visual {
-    margin-top: 40px;
   }
 }
 
 @media (max-width: 520px) {
-  .hero {
-    padding: 40px 0 80px;
-    min-height: auto;
-  }
-
-  .terminal {
-    max-width: 100%;
-  }
-
-  .float-chip {
-    display: none;
-  }
-
-  .hero-scroll {
-    display: none;
+  .dossier-footer {
+    grid-template-columns: 1fr;
   }
 }
 </style>

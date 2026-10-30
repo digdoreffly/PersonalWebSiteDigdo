@@ -1,41 +1,90 @@
 <template>
   <section id="contact" class="section contact">
     <div class="container">
-      <div class="contact-card glass" v-reveal="'fade-up'">
-        <p class="section-tag" style="justify-content: center">Get In Touch</p>
-        <h2 class="contact-title">LET'S BUILD SOMETHING</h2>
-        <p class="contact-desc">Have a project, opportunity, or idea? Let's connect.</p>
+      <div class="correspondence-card paper-card" v-reveal="'fade-up'">
+        <div class="corr-top">
+          <span class="corr-index">06 / {{ currentLang === 'id' ? 'Korespondensi' : 'Correspondence' }}</span>
+          <span class="corr-location">{{ personal.location }}</span>
+        </div>
 
-        <a :href="`mailto:${personal.email}`" class="btn btn-primary">Contact Me</a>
+        <div class="corr-body">
+          <div class="corr-copy">
+            <h2 class="corr-heading">
+              {{
+                currentLang === 'id'
+                  ? 'Mari berdiskusi tentang sistem atau proyek yang sedang Anda bangun'
+                  : 'Let’s talk about the systems or products your team is building'
+              }}
+            </h2>
+            <p class="corr-desc">
+              {{
+                currentLang === 'id'
+                  ? 'Baik untuk peluang full-time Software / Web Developer, pengembangan modul ERP & database, maupun kolaborasi aplikasi web dan Android—saya senang membaca pesan Anda.'
+                  : 'Whether you are hiring for an engineering team, planning an internal ERP or inventory workflow, or looking for a dependable developer for a web/mobile build—feel free to reach out directly.'
+              }}
+            </p>
 
-        <div class="contact-links">
-          <a :href="`mailto:${personal.email}`" class="contact-link">
-            <span class="icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6">
-                <rect x="3" y="5" width="18" height="14" rx="2" />
-                <path d="m4 7 8 6 8-6" />
-              </svg>
-            </span>
-            {{ personal.email }}
-          </a>
-          <a :href="personal.linkedin" target="_blank" rel="noopener noreferrer" class="contact-link">
-            <span class="icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm6.5 0H14v1.7h.06c.62-1.1 2.13-2.26 4.39-2.26 4.7 0 5.55 2.9 5.55 6.68V21h-4v-5.24c0-1.25-.02-2.86-1.75-2.86-1.75 0-2.02 1.36-2.02 2.77V21h-4V9Z" />
-              </svg>
-            </span>
-            LinkedIn
-          </a>
-          <a :href="personal.github" target="_blank" rel="noopener noreferrer" class="contact-link">
-            <span class="icon">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
-                <path
-                  d="M12 .5C5.73.5.75 5.48.75 11.75c0 4.94 3.2 9.13 7.65 10.6.56.1.76-.24.76-.54v-2.1c-3.11.68-3.77-1.5-3.77-1.5-.51-1.3-1.24-1.64-1.24-1.64-1.02-.7.08-.68.08-.68 1.12.08 1.71 1.15 1.71 1.15 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.72-1.5-2.48-.28-5.09-1.24-5.09-5.53 0-1.22.44-2.22 1.15-3-.11-.28-.5-1.42.11-2.96 0 0 .95-.3 3.1 1.15a10.8 10.8 0 0 1 5.65 0c2.15-1.45 3.1-1.15 3.1-1.15.61 1.54.22 2.68.11 2.96.72.78 1.15 1.78 1.15 3 0 4.3-2.62 5.25-5.11 5.52.41.35.76 1.04.76 2.1v3.11c0 .3.2.65.76.54 4.44-1.48 7.64-5.66 7.64-10.6C23.25 5.48 18.27.5 12 .5Z"
-                />
-              </svg>
-            </span>
-            GitHub
-          </a>
+            <div class="corr-actions">
+              <a :href="`mailto:${personal.email}`" class="btn-ink">
+                <span>{{ currentLang === 'id' ? 'Kirim Email' : 'Send an Email' }}</span>
+                <span aria-hidden="true">↗</span>
+              </a>
+
+              <button type="button" class="btn-ink-outline" @click="copyEmail">
+                <span>
+                  {{
+                    copied
+                      ? currentLang === 'id'
+                        ? 'Alamat Email Disalin ✓'
+                        : 'Email Copied ✓'
+                      : personal.email
+                  }}
+                </span>
+              </button>
+
+              <span class="visually-hidden" aria-live="polite">
+                {{
+                  copied
+                    ? currentLang === 'id'
+                      ? 'Alamat email berhasil disalin ke clipboard.'
+                      : 'Email address copied to clipboard.'
+                    : ''
+                }}
+              </span>
+            </div>
+          </div>
+
+          <div class="corr-channels">
+            <h3 class="channels-label">
+              {{ currentLang === 'id' ? 'Saluran Langsung' : 'Direct Channels' }}
+            </h3>
+            <ul class="channels-list" role="list">
+              <li>
+                <a :href="`mailto:${personal.email}`" class="channel-row">
+                  <span class="ch-name">Email</span>
+                  <span class="ch-val">{{ personal.email }} ↗</span>
+                </a>
+              </li>
+              <li>
+                <a :href="personal.linkedin" target="_blank" rel="noopener noreferrer" class="channel-row">
+                  <span class="ch-name">LinkedIn</span>
+                  <span class="ch-val">in/digdoreffly ↗</span>
+                </a>
+              </li>
+              <li>
+                <a :href="personal.github" target="_blank" rel="noopener noreferrer" class="channel-row">
+                  <span class="ch-name">GitHub</span>
+                  <span class="ch-val">github.com/digdoreffly ↗</span>
+                </a>
+              </li>
+              <li>
+                <a :href="personal.cvFile" download class="channel-row">
+                  <span class="ch-name">{{ currentLang === 'id' ? 'Dokumen CV' : 'Résumé / CV' }}</span>
+                  <span class="ch-val">Download PDF ↓</span>
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -43,76 +92,182 @@
 </template>
 
 <script setup>
-import { personal } from '../data/portfolio.js'
+import { ref } from 'vue'
+import { personal, currentLang } from '../data/portfolio.js'
+
+const copied = ref(false)
+let copyTimer = null
+
+async function copyEmail() {
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(personal.email)
+      copied.value = true
+      if (copyTimer) clearTimeout(copyTimer)
+      copyTimer = setTimeout(() => {
+        copied.value = false
+      }, 2600)
+    }
+  } catch {
+    window.location.href = `mailto:${personal.email}`
+  }
+}
 </script>
 
 <style scoped>
-.contact-card {
-  padding: 70px 40px;
-  border-radius: var(--radius-lg);
-  text-align: center;
-  max-width: 760px;
-  margin: 0 auto;
-  position: relative;
-  overflow: hidden;
+.correspondence-card {
+  padding: clamp(1.75rem, 4vw, 3.25rem);
 }
 
-.contact-card::before {
-  content: '';
-  position: absolute;
-  inset: -40%;
-  background: radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 60%);
-  pointer-events: none;
+.corr-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-block-end: 1.25rem;
+  margin-block-end: clamp(1.75rem, 3.5vw, 2.5rem);
+  border-bottom: 1.5px solid var(--text-ink);
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-ink);
 }
 
-.contact-title {
-  font-size: clamp(1.8rem, 4vw, 2.6rem);
-  color: var(--cream);
-  margin-bottom: 14px;
-  position: relative;
+.corr-index {
+  font-weight: 600;
 }
 
-.contact-desc {
-  color: var(--cream-soft);
-  margin-bottom: 32px;
-  position: relative;
+.corr-location {
+  color: var(--text-ink-muted);
 }
 
-.contact-links {
+.corr-body {
+  display: grid;
+  grid-template-columns: 1.25fr 0.75fr;
+  gap: clamp(2rem, 4vw, 3.5rem);
+  align-items: start;
+}
+
+.corr-heading {
+  font-size: clamp(1.65rem, 1.1rem + 2vw, 2.45rem);
+  color: var(--text-ink);
+  line-height: 1.16;
+  margin-block-end: 1rem;
+}
+
+.corr-desc {
+  color: var(--text-ink-muted);
+  font-size: 1rem;
+  line-height: 1.68;
+  max-width: 56ch;
+  margin-block-end: 1.85rem;
+}
+
+.corr-actions {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: 26px;
-  margin-top: 36px;
-  position: relative;
+  gap: 0.85rem;
 }
 
-.contact-link {
+.btn-ink {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.7rem 1.4rem;
+  border-radius: var(--radius-sm);
+  background: var(--text-ink);
+  color: var(--bg-paper);
+  font-family: var(--font-heading);
+  font-weight: 600;
   font-size: 0.9rem;
-  color: var(--cream-soft);
-  transition: color 0.25s var(--ease);
+  border: 1px solid var(--text-ink);
+  transition: background-color 0.2s var(--ease), border-color 0.2s var(--ease);
 }
 
-.contact-link .icon {
+.btn-ink:hover {
+  background: #B84A24;
+  border-color: #B84A24;
+  color: #FFF;
+}
+
+.btn-ink-outline {
   display: inline-flex;
-  color: var(--accent);
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding: 0.7rem 1.25rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-ink);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  border: 1px solid rgba(20, 22, 28, 0.35);
+  transition: border-color 0.2s var(--ease), background-color 0.2s var(--ease);
 }
 
-.contact-link:hover {
-  color: var(--cream);
+.btn-ink-outline:hover {
+  border-color: var(--text-ink);
+  background: rgba(20, 22, 28, 0.06);
 }
 
-@media (max-width: 560px) {
-  .contact-card {
-    padding: 50px 24px;
+.corr-channels {
+  padding-inline-start: clamp(0rem, 2.5vw, 2rem);
+  border-inline-start: 1px solid var(--rule-ink);
+}
+
+.channels-label {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-ink-muted);
+  margin-block-end: 0.85rem;
+}
+
+.channels-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.channel-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-block: 0.75rem;
+  border-bottom: 1px solid var(--rule-ink);
+  font-size: 0.88rem;
+  transition: color 0.2s var(--ease);
+}
+
+.channel-row:hover .ch-val {
+  color: #B84A24;
+}
+
+.ch-name {
+  font-weight: 600;
+  color: var(--text-ink);
+}
+
+.ch-val {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text-ink-muted);
+}
+
+@media (max-width: 860px) {
+  .corr-body {
+    grid-template-columns: 1fr;
   }
 
-  .contact-links {
-    flex-direction: column;
-    gap: 16px;
+  .corr-channels {
+    padding-inline-start: 0;
+    border-inline-start: none;
+    padding-block-start: 1.5rem;
+    border-top: 1px solid var(--rule-ink);
   }
 }
 </style>
