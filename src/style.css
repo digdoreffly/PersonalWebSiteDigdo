@@ -65,6 +65,16 @@
 
     --container: 1140px;
     --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --in-oklab: ;
+    --in-oklch: ;
+  }
+
+  @supports (background: linear-gradient(in oklab, white, black)) {
+    :root {
+      --in-oklab: in oklab;
+      --in-oklch: in oklch;
+    }
   }
 }
 
@@ -347,14 +357,28 @@
     opacity: 0;
     transform: translateY(18px);
     transition: opacity 0.65s var(--ease), transform 0.65s var(--ease);
+
+    @media (prefers-reduced-motion: reduce) {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
   }
 
   .reveal.fade-left {
     transform: translateX(-18px);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
   }
 
   .reveal.fade-right {
     transform: translateX(18px);
+
+    @media (prefers-reduced-motion: reduce) {
+      transform: none;
+    }
   }
 
   .reveal.is-visible {
@@ -379,11 +403,15 @@
   }
 
   .enter-up {
-    animation: fadeInUp 0.65s var(--ease) both;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: fadeInUp 0.65s var(--ease) both;
+    }
   }
 
   .enter-fade {
-    animation: fadeIn 0.75s var(--ease) both;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: fadeIn 0.75s var(--ease) both;
+    }
   }
 }
 
@@ -397,21 +425,4 @@
 ::-webkit-scrollbar-thumb {
   background: #2A2F3D;
   border-radius: 4px;
-}
-
-/* Respect reduced motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .reveal {
-    opacity: 1;
-    transform: none;
-  }
 }
